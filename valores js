@@ -1,0 +1,31 @@
+function CalcularData() {
+  var planilha = SpreadsheetApp.getActiveSpreadsheet();
+  var abaAtiva = planilha.getActiveSheet();
+  var valoresColunaG = abaAtiva.getRange("G4:G" + abaAtiva.getLastRow()).getValues();
+  var valoresColunaO = abaAtiva.getRange("O4:O" + abaAtiva.getLastRow()).getValues();
+  var valoresColunaB = abaAtiva.getRange("B4:B" + abaAtiva.getLastRow()).getValues();
+
+  for (var i = 0; i < valoresColunaG.length; i++) {
+    var valorG = valoresColunaG[i][0];
+    var valorO = valoresColunaO[i][0];
+    var valorB = new Date(valoresColunaB[i][0]);
+
+    if (valorG === "Atendimento (Externo Pós Vendas)") {
+      valorB.setDate(valorB.getDate() + 7);
+    } else if (valorG === "Atendimento (Externo Autorização )" && valorO === "Medicação") {
+      valorB.setDate(valorB.getDate() + 10);
+    } else if (valorG === "Atendimento (Externo Autorização )" && valorO === "Cirurgia") {
+      valorB.setDate(valorB.getDate() + 21);
+    } else if (valorG === "Atendimento (Externo Autorização )" && valorO === "Consulta") {
+      valorB.setDate(valorB.getDate() + 5);
+    } else if (valorG === "Atendimento (Externo Autorização )" && valorO === "Exame") {
+      valorB.setDate(valorB.getDate() + 5);
+    } else {
+      // Se não se encaixa em nenhuma das condições, deixe a célula vazia
+      valoresColunaB[i][0] = "";
+    }
+  }
+
+  var rangeColunaB = abaAtiva.getRange("H4:H" + (valoresColunaB.length + 3)); // Ajuste a última linha do intervalo
+  rangeColunaB.setValues(valoresColunaB);
+}
